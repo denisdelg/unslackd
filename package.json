@@ -23,6 +23,7 @@
     "npm": ">= 1.0.0"
   },
   "dependencies": {
+    "body-parser": "^1.14.2",
     "express": "~3.4.4",
     "node-untappd": "^0.4.1"
   },

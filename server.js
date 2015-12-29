@@ -3,6 +3,7 @@
 var express = require('express');
 var fs      = require('fs');
 var UntappdClient = require('node-untappd');
+var bodyParser = require('body-parser');
 
 /**
  *  Define the sample application.
@@ -78,18 +79,20 @@ var Unslackd = function() {
     self.createRoutes = function() {
         self.routes = { };
 
-        self.routes['/asciimo'] = function(req, res) {
-            var link = "http://i.imgur.com/kmbjB.png";
-            res.send("<html><body><img src='" + link + "'></body></html>");
-        };
-
         self.routes['/beer'] = function (req, res) {
-            untappd.beerSearch(function (err, obj) {
-                if (err === null) {
-                    res.send(obj.response.beers);
-                }
-                var blah = obj;
-            }, {q:'heretic evil twin', sort: "count"});
+            if (req.body.token === 'VbbbaMahEA7tKFTIfwNRVjZr') {
+                var myResp = { "test" : "Hello World" };
+                untappd.beerSearch(function (err, obj) {
+                    if (err === null && obj.response.beers.count > 0) {
+                        //res.send(obj.response.beers.items[0]);
+                        res.send(myResp);
+                    }
+                    var blah = obj;
+                }, { q: 'heretic evil twin', sort: "count" });
+            }
+            else {
+                res.status(500).send('Invalid Token');
+            }
         }
     };
 
@@ -101,10 +104,12 @@ var Unslackd = function() {
     self.initializeServer = function() {
         self.createRoutes();
         self.app = express();
+        self.app.use(express.json());
+        self.app.use(express.urlencoded());
 
         //  Add handlers for the app (from the routes).
         for (var r in self.routes) {
-            self.app.get(r, self.routes[r]);
+            self.app.post(r, self.routes[r]);
         }
     };
 
