@@ -95,7 +95,7 @@ var Unslackd = function() {
                             attachment.title_link = firstBrewery.contact.url;
                         }
 
-                        attachment.text = '_ABV: ' + firstBeer.beer_abv + '% IBU: ' + firstBeer.beer_ibu + ' Rating: ' + firstBeer.auth_rating + '/ 5_';
+                        attachment.text = '_ABV: ' + firstBeer.beer_abv + '% IBU: ' + firstBeer.beer_ibu + '_';
                         if (firstBeer.beer_description.length > 0) {
                             attachment.text += '\n' + firstBeer.beer_description;
                         }
