@@ -84,6 +84,7 @@ var Unslackd = function() {
                 var myResp = {};
                 untappd.beerSearch(function (err, obj) {
                     if (err === null && obj.response.beers.count > 0) {
+                        myResp.response_type = "in_channel";
                         myResp.text = 'Beer Name: ' + obj.response.beers.items[0].beer.beer_name + '\nBeer Style: ' + obj.response.beers.items[0].beer.beer_style + '\nABV: ' + 
                             obj.response.beers.items[0].beer.beer_abv + '\nIBU: ' + obj.response.beers.items[0].beer.beer_ibu + '\nDescription: ' + obj.response.beers.items[0].beer.beer_description;
                         //res.send(obj.response.beers.items[0]);
