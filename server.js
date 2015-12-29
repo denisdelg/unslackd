@@ -90,7 +90,7 @@ var Unslackd = function() {
                         var firstBrewery = obj.response.beers.items[0].brewery;
                         myResp.response_type = "in_channel";
                         var attachment = {};
-                        attachment.title = firstBeer.beer_name + ' - ' + firstBeer.beer_style;
+                        attachment.title = '*' + firstBeer.beer_name + ' - ' + firstBeer.beer_style + '*';
                         if (firstBrewery.contact.url !== null) {
                             attachment.title_link = firstBrewery.contact.url;
                         }
@@ -101,7 +101,7 @@ var Unslackd = function() {
                         }
                         attachment.thumb_url = firstBeer.beer_label;
                         attachment.color = 'good';
-                        attachment.mrkdwn_in = ['text'];
+                        attachment.mrkdwn_in = ['text', 'title'];
                         myResp.attachments.push(attachment);
                         res.send(myResp);
                     }
