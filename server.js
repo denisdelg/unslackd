@@ -90,12 +90,12 @@ var Unslackd = function() {
                         var firstBrewery = obj.response.beers.items[0].brewery;
                         myResp.response_type = "in_channel";
                         var attachment = {};
-                        attachment.title = '*' + firstBeer.beer_name + ' - ' + firstBeer.beer_style + '*';
+                        attachment.title = firstBeer.beer_name + ' - ' + firstBeer.beer_style;
                         if (firstBrewery.contact.url !== null) {
                             attachment.title_link = firstBrewery.contact.url;
                         }
 
-                        attachment.text = '_ABV: ' + firstBeer.beer_abv + '% IBU: ' + firstBeer.beer_ibu + '_';
+                        attachment.text = '_ABV: ' + firstBeer.beer_abv + '% IBU: ' + firstBeer.beer_ibu + ' Rating: ' + firstBeer.auth_rating + '/ 5_';
                         if (firstBeer.beer_description.length > 0) {
                             attachment.text += '\n' + firstBeer.beer_description;
                         }
