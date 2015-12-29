@@ -91,6 +91,7 @@ var Unslackd = function() {
                         var attachment = {};
                         attachment.title = obj.response.beers.items[0].beer.beer_name + '-' + obj.response.beers.items[0].beer.beer_style;
                         attachment.text = obj.response.beers.items[0].beer.beer_description;
+                        myResp.attachments.push(attachment);
                         res.send(myResp);
                     }
                 }, { q: req.body.text, sort: "count" });
