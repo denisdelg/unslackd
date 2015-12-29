@@ -2,7 +2,7 @@
 //  OpenShift sample Node application
 var express = require('express');
 var fs      = require('fs');
-
+var UntappdClient = require('node-untappd');
 
 /**
  *  Define the sample application.
@@ -11,7 +11,7 @@ var Unslackd = function() {
 
     //  Scope.
     var self = this;
-
+    var untappd = new UntappdClient(true);
 
     /*  ================================================================  */
     /*  Helper functions.                                                 */
@@ -46,7 +46,11 @@ var Unslackd = function() {
         }
         console.log('%s: Node server stopped.', Date(Date.now()) );
     };
-
+    
+    self.setupUntappd = function () {
+        untappd.setClientId('68B427F5E64CAB41AE5B87922F1471828EF022D2');
+        untappd.setClientSecret('0ED1B53558EEDF51843FC6A6BF0F796BD59CD0D0');
+    }
 
     /**
      *  Setup termination handlers (for exit and a list of signals).
@@ -79,10 +83,14 @@ var Unslackd = function() {
             res.send("<html><body><img src='" + link + "'></body></html>");
         };
 
-        self.routes['/'] = function(req, res) {
-            res.setHeader('Content-Type', 'text/html');
-            res.send(self.cache_get('index.html') );
-        };
+        self.routes['/beer'] = function (req, res) {
+            untappd.beerSearch(function (err, obj) {
+                if (err === null) {
+                    res.send(obj.response.beers);
+                }
+                var blah = obj;
+            }, {q:'heretic evil twin', sort: "count"});
+        }
     };
 
 
@@ -107,6 +115,7 @@ var Unslackd = function() {
     self.initialize = function() {
         self.setupVariables();
         self.setupTerminationHandlers();
+        self.setupUntappd();
 
         // Create the express server and routes.
         self.initializeServer();
