@@ -89,8 +89,11 @@ var Unslackd = function() {
                         myResp.response_type = "in_channel";
                         var attachment = {};
                         attachment.title = obj.response.beers.items[0].beer.beer_name + ' - ' + obj.response.beers.items[0].beer.beer_style;
-                        attachment.text = '_ABV: ' + obj.response.beers.items[0].beer.beer_abv + '% IBU: ' + obj.response.beers.items[0].beer.beer_ibu + '_\n' +
-                                obj.response.beers.items[0].beer.beer_description;
+                        attachment.text = '_ABV: ' + obj.response.beers.items[0].beer.beer_abv + '% IBU: ' + obj.response.beers.items[0].beer.beer_ibu + '_';
+                        if (obj.response.beers.items[0].beer.beer_description.length > 0) {
+                            attachment.text += '\n' + obj.response.beers.items[0].beer.beer_description;
+                        }
+                        
                         attachment.thumb_url = obj.response.beers.items[0].beer.beer_label;
                         attachment.color = 'good';
                         attachment.mrkdwn_in = ['text'];
