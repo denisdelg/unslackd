@@ -81,13 +81,16 @@ var Unslackd = function() {
 
         self.routes['/beer'] = function (req, res) {
             if (req.body.token === 'VbbbaMahEA7tKFTIfwNRVjZr') {
-                var myResp = {};
+                var myResp = {
+                    attachments: []
+                };
                 untappd.beerSearch(function (err, obj) {
                     if (err === null && obj.response.beers.count > 0) {
                         myResp.response_type = "in_channel";
-                        myResp.text = 'Beer Name: ' + obj.response.beers.items[0].beer.beer_name + '\nBeer Style: ' + obj.response.beers.items[0].beer.beer_style + '\nABV: ' + 
-                            obj.response.beers.items[0].beer.beer_abv + '\nIBU: ' + obj.response.beers.items[0].beer.beer_ibu + '\nDescription: ' + obj.response.beers.items[0].beer.beer_description;
-                        //res.send(obj.response.beers.items[0]);
+                        myResp.text = '_ABV: ' + obj.response.beers.items[0].beer.beer_abv + ' % IBU: ' + obj.response.beers.items[0].beer.beer_ibu + '_';
+                        var attachment = {};
+                        attachment.title = obj.response.beers.items[0].beer.beer_name + '-' + obj.response.beers.items[0].beer.beer_style;
+                        attachment.text = obj.response.beers.items[0].beer.beer_description;
                         res.send(myResp);
                     }
                 }, { q: req.body.text, sort: "count" });
