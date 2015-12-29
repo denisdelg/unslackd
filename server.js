@@ -87,10 +87,10 @@ var Unslackd = function() {
                 untappd.beerSearch(function (err, obj) {
                     if (err === null && obj.response.beers.count > 0) {
                         myResp.response_type = "in_channel";
-                        myResp.text = '_ABV: ' + obj.response.beers.items[0].beer.beer_abv + ' % IBU: ' + obj.response.beers.items[0].beer.beer_ibu + '_';
                         var attachment = {};
-                        attachment.title = obj.response.beers.items[0].beer.beer_name + '-' + obj.response.beers.items[0].beer.beer_style;
-                        attachment.text = obj.response.beers.items[0].beer.beer_description;
+                        attachment.title = obj.response.beers.items[0].beer.beer_name + ' - ' + obj.response.beers.items[0].beer.beer_style;
+                        attachment.text = '_ABV: ' + obj.response.beers.items[0].beer.beer_abv + ' % IBU: ' + obj.response.beers.items[0].beer.beer_ibu + '_\n' +
+                                obj.response.beers.items[0].beer.beer_description;
                         myResp.attachments.push(attachment);
                         res.send(myResp);
                     }
