@@ -86,15 +86,20 @@ var Unslackd = function() {
                 };
                 untappd.beerSearch(function (err, obj) {
                     if (err === null && obj.response.beers.count > 0) {
+                        var firstBeer = obj.response.beers.items[0].beer;
+                        var firstBrewery = obj.response.beers.items[0].brewery;
                         myResp.response_type = "in_channel";
                         var attachment = {};
-                        attachment.title = obj.response.beers.items[0].beer.beer_name + ' - ' + obj.response.beers.items[0].beer.beer_style;
-                        attachment.text = '_ABV: ' + obj.response.beers.items[0].beer.beer_abv + '% IBU: ' + obj.response.beers.items[0].beer.beer_ibu + '_';
-                        if (obj.response.beers.items[0].beer.beer_description.length > 0) {
-                            attachment.text += '\n' + obj.response.beers.items[0].beer.beer_description;
+                        attachment.title = firstBeer.beer_name + ' - ' + firstBeer.beer_style;
+                        if (firstBrewery.contact.url !== null) {
+                            attachment.title_link = firstBrewery.contact.url;
                         }
-                        
-                        attachment.thumb_url = obj.response.beers.items[0].beer.beer_label;
+
+                        attachment.text = '_ABV: ' + firstBeer.beer_abv + '% IBU: ' + firstBeer.beer_ibu + '_';
+                        if (firstBeer.beer_description.length > 0) {
+                            attachment.text += '\n' + firstBeer.beer_description;
+                        }
+                        attachment.thumb_url = firstBeer.beer_label;
                         attachment.color = 'good';
                         attachment.mrkdwn_in = ['text'];
                         myResp.attachments.push(attachment);
