@@ -81,14 +81,15 @@ var Unslackd = function() {
 
         self.routes['/beer'] = function (req, res) {
             if (req.body.token === 'VbbbaMahEA7tKFTIfwNRVjZr') {
-                var myResp = { "test" : "Hello World" };
+                var myResp = {};
                 untappd.beerSearch(function (err, obj) {
                     if (err === null && obj.response.beers.count > 0) {
+                        myResp.text = 'Beer Name: ' + obj.response.beers.items[0].beer.beer_name + '\nBeer Style: ' + obj.response.beers.items[0].beer.beer_style + '\nABV: ' + 
+                            obj.response.beers.items[0].beer.beer_abv + '\nIBU: ' + obj.response.beers.items[0].beer.beer_ibu + '\nDescription: ' + obj.response.beers.items[0].beer.beer_description;
                         //res.send(obj.response.beers.items[0]);
                         res.send(myResp);
                     }
-                    var blah = obj;
-                }, { q: 'heretic evil twin', sort: "count" });
+                }, { q: req.body.text, sort: "count" });
             }
             else {
                 res.status(500).send('Invalid Token');
