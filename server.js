@@ -4,7 +4,7 @@ var express = require('express');
 var fs      = require('fs');
 var UntappdClient = require('node-untappd');
 var bodyParser = require('body-parser');
-var config = require('./app-root/data/config.json');
+var config = require('/app-root/data/config.json');
 
 /**
  *  Define the sample application.
