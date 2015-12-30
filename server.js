@@ -81,30 +81,9 @@ var Unslackd = function() {
 
         self.routes['/beer'] = function (req, res) {
             if (req.body.token === 'VbbbaMahEA7tKFTIfwNRVjZr') {
-                var myResp = {
-                    attachments: []
-                };
                 untappd.beerSearch(function (err, obj) {
-                    if (err === null && obj.response.beers.count > 0) {
-                        var firstBeer = obj.response.beers.items[0].beer;
-                        var firstBrewery = obj.response.beers.items[0].brewery;
-                        myResp.response_type = "in_channel";
-                        var attachment = {};
-                        attachment.title = firstBeer.beer_name + ' - ' + firstBeer.beer_style;
-                        if (firstBrewery.contact.url !== null) {
-                            attachment.title_link = firstBrewery.contact.url;
-                        }
-
-                        attachment.text = '_ABV: ' + firstBeer.beer_abv + '% IBU: ' + firstBeer.beer_ibu + '_';
-                        if (firstBeer.beer_description.length > 0) {
-                            attachment.text += '\n' + firstBeer.beer_description;
-                        }
-                        attachment.thumb_url = firstBeer.beer_label;
-                        attachment.color = 'good';
-                        attachment.mrkdwn_in = ['text', 'title'];
-                        myResp.attachments.push(attachment);
-                        res.send(myResp);
-                    }
+                    var resp = self.handleBeerSearch(err, obj);
+                    res.send(resp);
                 }, { q: req.body.text, sort: "count" });
             }
             else {
@@ -112,7 +91,34 @@ var Unslackd = function() {
             }
         }
     };
+    
+    self.handleBeerSearch = function (err, obj) {
+        var response = { attachments: [] };
 
+        if (err === null && obj.response.beers.count > 0) {
+            var firstBeer = obj.response.beers.items[0].beer;
+            var firstBrewery = obj.response.beers.items[0].brewery;
+
+            response.response_type = "in_channel";
+            var attachment = {};
+            attachment.title = firstBrewery.brewery_name + ' - ' + firstBeer.beer_name + ' - ' + firstBeer.beer_style;
+            
+            if (firstBrewery.contact.url !== null) {
+                attachment.title_link = firstBrewery.contact.url;
+            }
+            
+            attachment.text = '_ABV: ' + firstBeer.beer_abv + '% IBU: ' + firstBeer.beer_ibu + '_';
+            if (firstBeer.beer_description.length > 0) {
+                attachment.text += '\n' + firstBeer.beer_description;
+            }
+            attachment.thumb_url = firstBeer.beer_label;
+            attachment.color = 'good';
+            attachment.mrkdwn_in = ['text', 'title'];
+            response.attachments.push(attachment);
+        }
+
+        return response;
+    }
 
     /**
      *  Initialize the server (express) and create the routes and register
