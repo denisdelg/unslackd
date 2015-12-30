@@ -116,8 +116,8 @@ var Unslackd = function() {
                 attachment.title_link = brewery.contact.url;
             }
             
-            attachment.text = '_ABV: ' + beer.beer_abv + '% IBU: ' + beer.beer_ibu + '_';
-            attachment.text += '\n Checkins: ' + count + ' Rating: ' + beer.rating_score + ' / 5';
+            attachment.text = '_*ABV: ' + beer.beer_abv + '% IBU: ' + beer.beer_ibu + '*_';
+            attachment.text += '\n *Checkins: ' + count + ' Rating: ' + beer.rating_score + ' / 5*';
             if (beer.beer_description.length > 0) {
                 attachment.text += '\n' + beer.beer_description;
             }
