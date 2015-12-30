@@ -119,7 +119,7 @@ var Unslackd = function() {
             
             attachment.text = '_*ABV: ' + beer.beer_abv + '% IBU: ' + beer.beer_ibu + '*_';
 
-            if (count !== null) {
+            if (count) {
                 attachment.text += '\n _*Checkins: ' + count + ' Rating: ' + beer.rating_score + ' / 5*_';
             }
             if (beer.beer_description.length > 0) {
