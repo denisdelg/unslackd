@@ -1,5 +1,4 @@
 #!/bin/env node
-//  OpenShift sample Node application
 var express = require('express');
 var fs      = require('fs');
 var UntappdClient = require('node-untappd');
@@ -7,18 +6,10 @@ var bodyParser = require('body-parser');
 var config = require('/var/lib/openshift/5682c2937628e1970e0001d8/app-root/data/config.json');
 //var config = require('./config.json');
 
-/**
- *  Define the sample application.
- */
-var Unslackd = function() {
 
-    //  Scope.
+var Unslackd = function() {
     var self = this;
     var untappd = new UntappdClient(true);
-
-    /*  ================================================================  */
-    /*  Helper functions.                                                 */
-    /*  ================================================================  */
 
     /**
      *  Set up server IP address and port # using env variables/defaults.
@@ -69,11 +60,6 @@ var Unslackd = function() {
             process.on(element, function() { self.terminator(element); });
         });
     };
-
-
-    /*  ================================================================  */
-    /*  App server functions (main app logic here).                       */
-    /*  ================================================================  */
 
     /**
      *  Create the routing table entries + handlers for the application.
