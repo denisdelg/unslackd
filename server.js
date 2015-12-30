@@ -108,6 +108,7 @@ var Unslackd = function() {
             var beer = obj.response.beers.items[0].beer;
             var brewery = obj.response.beers.items[0].brewery;
             var count = obj.response.beers.items[0].count;
+            var rating = obj.response.beers.items[0].rating_score;
 
             response.response_type = "in_channel";
             var attachment = {};
@@ -120,7 +121,7 @@ var Unslackd = function() {
             attachment.text = '_*ABV: ' + beer.beer_abv + '% IBU: ' + beer.beer_ibu + '*_';
 
             if (count) {
-                attachment.text += '\n _*Checkins: ' + count + ' Rating: ' + beer.rating_score + ' / 5*_';
+                attachment.text += '\n _*Checkins: ' + count + ' Rating: ' + rating + ' / 5*_';
             }
             if (beer.beer_description.length > 0) {
                 attachment.text += '\n' + beer.beer_description;
