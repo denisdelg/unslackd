@@ -1,2 +1,2 @@
 echo Copying config.json
-cp ../../config.json config.json
+cp ~/app-root/data/config.json config.json
