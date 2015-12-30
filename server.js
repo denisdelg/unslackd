@@ -4,7 +4,7 @@ var express = require('express');
 var fs      = require('fs');
 var UntappdClient = require('node-untappd');
 var bodyParser = require('body-parser');
-var config = require('../../app-root/data/config.json');
+var config = require('/var/lib/openshift/5682c2937628e1970e0001d8/app-root/data/config.json');
 
 /**
  *  Define the sample application.
