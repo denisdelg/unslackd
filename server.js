@@ -94,6 +94,7 @@ var Unslackd = function() {
                         if (err === null && obj.response.checkins.count > 0) {
                             var cid = obj.response.checkins.items[0].checkin_id;
                             untappd.toast(function () {
+                                res.status(200).send();
                             }, { CHECKIN_ID: cid });
                         }
                     }, { USERNAME: tokens[1], limit: 1 });
