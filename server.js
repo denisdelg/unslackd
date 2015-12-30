@@ -81,10 +81,19 @@ var Unslackd = function() {
 
         self.routes['/beer'] = function (req, res) {
             if (req.body.token === 'VbbbaMahEA7tKFTIfwNRVjZr') {
-                untappd.beerSearch(function (err, obj) {
-                    var resp = self.handleBeerSearch(err, obj);
-                    res.send(resp);
-                }, { q: req.body.text, sort: "count" });
+                var tokens = req.body.text.split(' ');
+                if (tokens.length > 0 && tokens[0] === 'fav') {
+                    untappd.userDistinctBeers(function (err, obj) {
+                        var resp = self.handleFavoriteBeerSearch(err, obj);
+                        res.send(resp);
+                    }, { USERNAME: tokens[1], sort: 'checkin', limit: 1 });
+                }
+                else {
+                    untappd.beerSearch(function (err, obj) {
+                        var resp = self.handleBeerSearch(err, obj);
+                        res.send(resp);
+                    }, { q: req.body.text, sort: 'count' });
+                }
             }
             else {
                 res.status(500).send('Invalid Token');
@@ -92,6 +101,35 @@ var Unslackd = function() {
         }
     };
     
+    self.handleFavoriteBeerSearch = function (err, obj) {
+        var response = { attachments: [] };
+        if (err === null && obj.response.beers.count > 0) {
+            var beer = obj.response.beers.items[0].beer;
+            var brewery = obj.response.beers.items[0].brewery;
+            var count = obj.response.beers.items[0].count;
+
+            response.response_type = "in_channel";
+            var attachment = {};
+            attachment.title = brewery.brewery_name + ' - ' + beer.beer_name + ' - ' + beer.beer_style;
+            
+            if (brewery.contact.url !== null) {
+                attachment.title_link = brewery.contact.url;
+            }
+            
+            attachment.text = '_ABV: ' + beer.beer_abv + '% IBU: ' + beer.beer_ibu + '_';
+            attachment.text += '\n Checkins: ' + count + ' Rating: ' + beer.rating_score + ' / 5';
+            if (beer.beer_description.length > 0) {
+                attachment.text += '\n' + beer.beer_description;
+            }
+            attachment.thumb_url = beer.beer_label;
+            attachment.color = 'good';
+            attachment.mrkdwn_in = ['text', 'title'];
+            response.attachments.push(attachment);
+        }
+
+        return response;
+    }
+
     self.handleBeerSearch = function (err, obj) {
         var response = { attachments: [] };
 
