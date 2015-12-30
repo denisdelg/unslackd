@@ -1,22 +1,19 @@
 {
-  "name": "OpenShift-Sample-App",
-  "version": "1.0.0",
-  "description": "OpenShift Sample Application",
+  "name": "Unslackd",
+  "version": "0.0.1",
+  "description": "Custom Slack slash command to deliver Untappd information",
   "keywords": [
     "OpenShift",
     "Node.js",
     "application",
-    "openshift"
+    "openshift",
+    "Slack",
+    "Untappd"
   ],
   "author": {
     "name": "Denis DelGrosso",
     "email": "denisdelg@gmail.com",
     "url": "https://github.com/denisdelg"
-  },
-  "homepage": "http://www.openshift.com/",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/openshift/origin-server"
   },
   "engines": {
     "node": ">= 0.6.0",
