@@ -102,6 +102,12 @@ var Unslackd = function() {
                 //        }
                 //    }, { USERNAME: tokens[1], limit: 1 });
                 //}
+                else if (tokens.length > 0 && tokens[0] === 'badge') {
+                    untappd.userBadges(function (err, obj) {
+                        var resp = self.handleUserBadge(err, obj);
+                        res.send(resp);
+                    }, { USERNAME: tokens[1], limit: 1 });
+                }
                 else {
                     untappd.beerSearch(function (err, obj) {
                         var resp = self.handleBeerSearch(err, obj);
@@ -115,6 +121,24 @@ var Unslackd = function() {
         }
     };
     
+    self.handleUserBadge = function (err, obj) {
+        var response = { attachments: [] };
+        if (err === null && obj.response.count > 0) {
+            var badge = obj.response.items[0];
+            response.response_type = "in_channel";
+            var attachment = {
+                title: badge.badge_name,
+                text: badge.badge_description,
+                thumb_url: badge.badge_image_sm,
+                color: 'good'
+            };
+            
+            response.attachments.push(attachment);
+        }
+
+        return response;
+    }
+
     self.handleBeerSearch = function (err, obj) {
         var response = { attachments: [] };
         if (err === null && obj.response.beers.count > 0) {
