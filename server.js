@@ -5,6 +5,7 @@ var fs      = require('fs');
 var UntappdClient = require('node-untappd');
 var bodyParser = require('body-parser');
 var config = require('/var/lib/openshift/5682c2937628e1970e0001d8/app-root/data/config.json');
+//var config = require('./config.json');
 
 /**
  *  Define the sample application.
@@ -89,16 +90,18 @@ var Unslackd = function() {
                         res.send(resp);
                     }, { USERNAME: tokens[1], sort: 'checkin', limit: 1 });
                 }
-                else if (tokens.length > 0 && tokens[0] === 'toast') {
-                    untappd.userActivityFeed(function (err, obj) {
-                        if (err === null && obj.response.checkins.count > 0) {
-                            var cid = obj.response.checkins.items[0].checkin_id;
-                            untappd.toast(function () {
-                                res.status(200).send();
-                            }, { CHECKIN_ID: cid });
-                        }
-                    }, { USERNAME: tokens[1], limit: 1 });
-                }
+                //else if (tokens.length > 0 && tokens[0] === 'toast') {
+                //    untappd.userActivityFeed(function (err, obj) {
+                //        if (err === null && obj.response.checkins.count > 0) {
+                //            var cid = obj.response.checkins.items[0].checkin_id;
+                //            untappd.toast(function (err, obj) {
+                //                if (err === null) {
+                //                    res.status(200).send();
+                //                }
+                //            }, { CHECKIN_ID: cid });
+                //        }
+                //    }, { USERNAME: tokens[1], limit: 1 });
+                //}
                 else {
                     untappd.beerSearch(function (err, obj) {
                         var resp = self.handleBeerSearch(err, obj);
