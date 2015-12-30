@@ -129,7 +129,7 @@ var Unslackd = function() {
             var attachment = {
                 title: badge.badge_name,
                 text: badge.badge_description,
-                thumb_url: badge.badge_image_sm,
+                thumb_url: badge.media.badge_image_sm,
                 color: 'good'
             };
             
