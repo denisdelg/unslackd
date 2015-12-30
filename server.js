@@ -4,6 +4,7 @@ var express = require('express');
 var fs      = require('fs');
 var UntappdClient = require('node-untappd');
 var bodyParser = require('body-parser');
+var config = require('./config.json');
 
 /**
  *  Define the sample application.
@@ -49,8 +50,8 @@ var Unslackd = function() {
     };
     
     self.setupUntappd = function () {
-        untappd.setClientId('68B427F5E64CAB41AE5B87922F1471828EF022D2');
-        untappd.setClientSecret('0ED1B53558EEDF51843FC6A6BF0F796BD59CD0D0');
+        untappd.setClientId(config.clientid);
+        untappd.setClientSecret(config.clientsecret);
     }
 
     /**
@@ -80,7 +81,7 @@ var Unslackd = function() {
         self.routes = { };
 
         self.routes['/beer'] = function (req, res) {
-            if (req.body.token === 'VbbbaMahEA7tKFTIfwNRVjZr') {
+            if (req.body.token === config.slacktoken) {
                 var tokens = req.body.text.split(' ');
                 if (tokens.length > 0 && tokens[0] === 'fav') {
                     untappd.userDistinctBeers(function (err, obj) {
@@ -117,7 +118,7 @@ var Unslackd = function() {
             }
             
             attachment.text = '_*ABV: ' + beer.beer_abv + '% IBU: ' + beer.beer_ibu + '*_';
-            attachment.text += '\n *Checkins: ' + count + ' Rating: ' + beer.rating_score + ' / 5*';
+            attachment.text += '\n _*Checkins: ' + count + ' Rating: ' + beer.rating_score + ' / 5*_';
             if (beer.beer_description.length > 0) {
                 attachment.text += '\n' + beer.beer_description;
             }
