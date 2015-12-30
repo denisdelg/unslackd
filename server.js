@@ -85,7 +85,7 @@ var Unslackd = function() {
                 var tokens = req.body.text.split(' ');
                 if (tokens.length > 0 && tokens[0] === 'fav') {
                     untappd.userDistinctBeers(function (err, obj) {
-                        var resp = self.handleFavoriteBeerSearch(err, obj);
+                        var resp = self.handleBeerSearch(err, obj);
                         res.send(resp);
                     }, { USERNAME: tokens[1], sort: 'checkin', limit: 1 });
                 }
@@ -102,7 +102,7 @@ var Unslackd = function() {
         }
     };
     
-    self.handleFavoriteBeerSearch = function (err, obj) {
+    self.handleBeerSearch = function (err, obj) {
         var response = { attachments: [] };
         if (err === null && obj.response.beers.count > 0) {
             var beer = obj.response.beers.items[0].beer;
@@ -118,39 +118,15 @@ var Unslackd = function() {
             }
             
             attachment.text = '_*ABV: ' + beer.beer_abv + '% IBU: ' + beer.beer_ibu + '*_';
-            attachment.text += '\n _*Checkins: ' + count + ' Rating: ' + beer.rating_score + ' / 5*_';
+
+            if (count !== null) {
+                attachment.text += '\n _*Checkins: ' + count + ' Rating: ' + beer.rating_score + ' / 5*_';
+            }
             if (beer.beer_description.length > 0) {
                 attachment.text += '\n' + beer.beer_description;
             }
+
             attachment.thumb_url = beer.beer_label;
-            attachment.color = 'good';
-            attachment.mrkdwn_in = ['text', 'title'];
-            response.attachments.push(attachment);
-        }
-
-        return response;
-    }
-
-    self.handleBeerSearch = function (err, obj) {
-        var response = { attachments: [] };
-
-        if (err === null && obj.response.beers.count > 0) {
-            var firstBeer = obj.response.beers.items[0].beer;
-            var firstBrewery = obj.response.beers.items[0].brewery;
-
-            response.response_type = "in_channel";
-            var attachment = {};
-            attachment.title = firstBrewery.brewery_name + ' - ' + firstBeer.beer_name + ' - ' + firstBeer.beer_style;
-            
-            if (firstBrewery.contact.url !== null) {
-                attachment.title_link = firstBrewery.contact.url;
-            }
-            
-            attachment.text = '_ABV: ' + firstBeer.beer_abv + '% IBU: ' + firstBeer.beer_ibu + '_';
-            if (firstBeer.beer_description.length > 0) {
-                attachment.text += '\n' + firstBeer.beer_description;
-            }
-            attachment.thumb_url = firstBeer.beer_label;
             attachment.color = 'good';
             attachment.mrkdwn_in = ['text', 'title'];
             response.attachments.push(attachment);
