@@ -89,6 +89,15 @@ var Unslackd = function() {
                         res.send(resp);
                     }, { USERNAME: tokens[1], sort: 'checkin', limit: 1 });
                 }
+                else if (tokens.length > 0 && tokens[0] === 'toast') {
+                    untappd.userActivityFeed(function (err, obj) {
+                        if (err === null && obj.response.checkins.count > 0) {
+                            var cid = obj.response.checkins.items[0].checkin_id;
+                            untappd.toast(function () {
+                            }, { CHECKIN_ID: cid });
+                        }
+                    }, { USERNAME: tokens[1], limit: 1 });
+                }
                 else {
                     untappd.beerSearch(function (err, obj) {
                         var resp = self.handleBeerSearch(err, obj);
