@@ -1,10 +1,15 @@
 #!/bin/env node
-var express = require('express');
-var fs      = require('fs');
-var UntappdClient = require('node-untappd');
-var bodyParser = require('body-parser');
-var config = require('/var/lib/openshift/5682c2937628e1970e0001d8/app-root/data/config.json');
-//var config = require('./config.json');
+const express = require('express');
+const fs      = require('fs');
+const UntappdClient = require('node-untappd');
+const bodyparser = require('body-parser');
+const config = require('/var/lib/openshift/5682c2937628e1970e0001d8/app-root/data/config.json');
+const app = express();
+//const config = require('./config.json');
+
+app.use(bodyparser.json());
+app.use(bodyparser.urlencoded({ extended: false }));
+require('./config/routes.js')(app);
 
 
 var Unslackd = function() {
@@ -41,11 +46,6 @@ var Unslackd = function() {
         console.log('%s: Node server stopped.', Date(Date.now()) );
     };
     
-    self.setupUntappd = function () {
-        untappd.setClientId(config.clientid);
-        untappd.setClientSecret(config.clientsecret);
-    }
-
     /**
      *  Setup termination handlers (for exit and a list of signals).
      */
@@ -61,131 +61,13 @@ var Unslackd = function() {
         });
     };
 
-    /**
-     *  Create the routing table entries + handlers for the application.
-     */
-    self.createRoutes = function() {
-        self.routes = { };
-
-        self.routes['/beer'] = function (req, res) {
-            if (req.body.token === config.slacktoken) {
-                var tokens = req.body.text.split(' ');
-                if (tokens.length > 0 && tokens[0] === 'fav') {
-                    untappd.userDistinctBeers(function (err, obj) {
-                        var resp = self.handleBeerSearch(err, obj);
-                        res.send(resp);
-                    }, { USERNAME: tokens[1], sort: 'checkin', limit: 1 });
-                }
-                //else if (tokens.length > 0 && tokens[0] === 'toast') {
-                //    untappd.userActivityFeed(function (err, obj) {
-                //        if (err === null && obj.response.checkins.count > 0) {
-                //            var cid = obj.response.checkins.items[0].checkin_id;
-                //            untappd.toast(function (err, obj) {
-                //                if (err === null) {
-                //                    res.status(200).send();
-                //                }
-                //            }, { CHECKIN_ID: cid });
-                //        }
-                //    }, { USERNAME: tokens[1], limit: 1 });
-                //}
-                else if (tokens.length > 0 && tokens[0] === 'badge') {
-                    untappd.userBadges(function (err, obj) {
-                        var resp = self.handleUserBadge(err, obj);
-                        res.send(resp);
-                    }, { USERNAME: tokens[1], limit: 1 });
-                }
-                else {
-                    untappd.beerSearch(function (err, obj) {
-                        var resp = self.handleBeerSearch(err, obj);
-                        res.send(resp);
-                    }, { q: req.body.text, sort: 'count' });
-                }
-            }
-            else {
-                res.status(500).send('Invalid Token');
-            }
-        }
-    };
     
-    self.handleUserBadge = function (err, obj) {
-        var response = { attachments: [] };
-        if (err === null && obj.response.count > 0) {
-            var badge = obj.response.items[0];
-            response.response_type = "in_channel";
-            var attachment = {
-                title: badge.badge_name,
-                text: badge.badge_description,
-                thumb_url: badge.media.badge_image_sm,
-                color: 'good'
-            };
-            
-            response.attachments.push(attachment);
-        }
-
-        return response;
-    }
-
-    self.handleBeerSearch = function (err, obj) {
-        var response = { attachments: [] };
-        if (err === null && obj.response.beers.count > 0) {
-            var beer = obj.response.beers.items[0].beer;
-            var brewery = obj.response.beers.items[0].brewery;
-            var count = obj.response.beers.items[0].count;
-            var rating = obj.response.beers.items[0].rating_score;
-
-            response.response_type = "in_channel";
-            var attachment = {};
-            attachment.title = brewery.brewery_name + ' - ' + beer.beer_name + ' - ' + beer.beer_style;
-            
-            if (brewery.contact.url !== null) {
-                attachment.title_link = brewery.contact.url;
-            }
-            
-            attachment.text = '_*ABV: ' + beer.beer_abv + '% IBU: ' + beer.beer_ibu + '*_';
-
-            if (count) {
-                attachment.text += '\n _*Checkins: ' + count + ' Rating: ' + rating + ' / 5*_';
-            }
-            if (beer.beer_description.length > 0) {
-                attachment.text += '\n' + beer.beer_description;
-            }
-
-            attachment.thumb_url = beer.beer_label;
-            attachment.color = 'good';
-            attachment.mrkdwn_in = ['text', 'title'];
-            response.attachments.push(attachment);
-        }
-
-        return response;
-    }
-
-    /**
-     *  Initialize the server (express) and create the routes and register
-     *  the handlers.
-     */
-    self.initializeServer = function() {
-        self.createRoutes();
-        self.app = express();
-        self.app.use(express.json());
-        self.app.use(express.urlencoded());
-
-        //  Add handlers for the app (from the routes).
-        for (var r in self.routes) {
-            self.app.post(r, self.routes[r]);
-        }
-    };
-
-
     /**
      *  Initializes the sample application.
      */
     self.initialize = function() {
         self.setupVariables();
         self.setupTerminationHandlers();
-        self.setupUntappd();
-
-        // Create the express server and routes.
-        self.initializeServer();
     };
 
 
@@ -194,7 +76,7 @@ var Unslackd = function() {
      */
     self.start = function() {
         //  Start the app on the specific interface (and port).
-        self.app.listen(self.port, self.ipaddress, function() {
+        app.listen(self.port, self.ipaddress, function() {
             console.log('%s: Node server started on %s:%d ...',
                         Date(Date.now() ), self.ipaddress, self.port);
         });
