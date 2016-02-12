@@ -1,7 +1,6 @@
 #!/bin/env node
 const express = require('express');
 const fs      = require('fs');
-const UntappdClient = require('node-untappd');
 const bodyparser = require('body-parser');
 const config = require('/var/lib/openshift/5682c2937628e1970e0001d8/app-root/data/config.json');
 const app = express();
@@ -14,7 +13,6 @@ require('./config/routes.js')(app);
 
 var Unslackd = function() {
     var self = this;
-    var untappd = new UntappdClient(true);
 
     /**
      *  Set up server IP address and port # using env variables/defaults.
