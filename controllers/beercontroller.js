@@ -59,7 +59,7 @@ function sendResponse(resp, url) {
 function handleBeerSearch(err, obj, url) {
 	//var response = { attachments: [] };
     if (!err) {
-        for (var i = 0; i < Math.max(obj.response.beers.items.length, 5); i++) {
+        for (var i = 0; i < Math.min(obj.response.beers.items.length, 5); i++) {
             var beer = obj.response.beers.items[i].beer;
             var brewery = obj.response.beers.items[i].brewery;
             var count = obj.response.beers.items[i].count;
