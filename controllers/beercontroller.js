@@ -18,8 +18,8 @@ module.exports = {
                 var tokens = req.body.text.split(' ');
                 if (tokens.length > 0 && tokens[0] === 'fav') {
                     untappd.userDistinctBeers(function (err, obj) {
-                        var resp = handleBeerSearch(err, obj);
-                        sendResponse(resp, responseUrl);
+                        var resp = handleBeerSearch(err, obj, responseUrl);
+                        //sendResponse(resp, responseUrl);
                     }, { USERNAME: tokens[1], sort: 'checkin', limit: 1 });
                 }
                 else if (tokens.length > 0 && tokens[0] === 'badge') {
@@ -30,8 +30,8 @@ module.exports = {
                 }
                 else {
                     untappd.beerSearch(function (err, obj) {
-                        var resp = handleBeerSearch(err, obj);
-                        sendResponse(resp, responseUrl);
+                        var resp = handleBeerSearch(err, obj,responseUrl);
+                        //sendResponse(resp, responseUrl);
                     }, { q: req.body.text, sort: 'count' });
                 }
             }
@@ -43,7 +43,6 @@ module.exports = {
 }
 
 function sendResponse(resp, url) {
-    
     request.post({
         url: url,
         method: "POST",
@@ -57,38 +56,71 @@ function sendResponse(resp, url) {
     });
 }
 
-function handleBeerSearch(err, obj) {
-	var response = { attachments: [] };
-	if (err === null && obj.response.beers.count > 0) {
-		var beer = obj.response.beers.items[0].beer;
-		var brewery = obj.response.beers.items[0].brewery;
-		var count = obj.response.beers.items[0].count;
-		var rating = obj.response.beers.items[0].rating_score;
+function handleBeerSearch(err, obj, url) {
+	//var response = { attachments: [] };
+    if (!err) {
+        for (var i = 0; i < Math.max(obj.response.beers.items.length, 5); i++) {
+            var beer = obj.response.beers.items[i].beer;
+            var brewery = obj.response.beers.items[i].brewery;
+            var count = obj.response.beers.items[i].count;
+            var rating = obj.response.beers.items[i].rating_score;
+            
+            var response = {
+                response_type: "in_channel",
+                attachments: []
+            };
+            
+            var attachment = {
+                title: brewery.brewery_name + ' - ' + beer.beer_name + ' - ' + beer.beer_style,
+                text: '_*ABV: ' + beer.beer_abv + '% IBU: ' + beer.beer_ibu + '*_',
+                thumb_url: beer.beer_label,
+                color: 'good',
+                mrkdwn_in: ['text', 'title']
+            }
+            
+            if (brewery.contact.url) {
+                attachment.title_link = brewery.contact.url;
+            }
+            
+            if (count) {
+                attachment.text += '\n _*Checkins: ' + count + ' Rating: ' + rating + ' / 5*_';
+            }
+            
+            if (beer.beer_description.length > 0) {
+                attachment.text += '\n' + beer.beer_description;
+            }
+            
+            response.attachments.push(attachment);
+            sendResponse(response, url);
+        }
+    }
+
 		
-		response.response_type = "in_channel";
-		var attachment = {};
-		attachment.title = brewery.brewery_name + ' - ' + beer.beer_name + ' - ' + beer.beer_style;
 		
-		if (brewery.contact.url !== null) {
-			attachment.title_link = brewery.contact.url;
-		}
+		//response.response_type = "in_channel";
+		//var attachment = {};
+		//attachment.title = brewery.brewery_name + ' - ' + beer.beer_name + ' - ' + beer.beer_style;
 		
-		attachment.text = '_*ABV: ' + beer.beer_abv + '% IBU: ' + beer.beer_ibu + '*_';
+		//if (brewery.contact.url !== null) {
+		//	attachment.title_link = brewery.contact.url;
+		//}
 		
-		if (count) {
-			attachment.text += '\n _*Checkins: ' + count + ' Rating: ' + rating + ' / 5*_';
-		}
-		if (beer.beer_description.length > 0) {
-			attachment.text += '\n' + beer.beer_description;
-		}
+		//attachment.text = '_*ABV: ' + beer.beer_abv + '% IBU: ' + beer.beer_ibu + '*_';
 		
-		attachment.thumb_url = beer.beer_label;
-		attachment.color = 'good';
-		attachment.mrkdwn_in = ['text', 'title'];
-		response.attachments.push(attachment);
-	}
+		//if (count) {
+		//	attachment.text += '\n _*Checkins: ' + count + ' Rating: ' + rating + ' / 5*_';
+		//}
+		//if (beer.beer_description.length > 0) {
+		//	attachment.text += '\n' + beer.beer_description;
+		//}
+		
+		//attachment.thumb_url = beer.beer_label;
+		//attachment.color = 'good';
+		//attachment.mrkdwn_in = ['text', 'title'];
+		//response.attachments.push(attachment);
 	
-	return response;
+	
+	//return response;
 }
 
 function handleUserBadge (err, obj) {
