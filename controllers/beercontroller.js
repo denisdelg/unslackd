@@ -35,7 +35,7 @@ module.exports = {
                 }
                 else if (tokens.length > 0 && tokens[0] === 'badge') {
                     untappd.userBadges(function (err, obj) {
-                        var resp = handleUserBadge(err, obj);
+                        var resp = handleUserBadge(err, obj, responseUrl);
                     }, { USERNAME: tokens[1], limit: limit });
                 }
                 else {
