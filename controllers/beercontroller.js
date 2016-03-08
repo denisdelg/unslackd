@@ -16,23 +16,33 @@ module.exports = {
             var responseUrl = req.body.response_url;
             if (req.body.text) {
                 var tokens = req.body.text.split(' ');
+                var limit = 1;
+                var temp = parseInt(tokens[tokens.length - 1]);
+                
+                if (!isNaN(temp)) {
+                    limit = temp;
+                }
+
+                if (limit > 5) {
+                    limit = 5;
+                }
+
+
                 if (tokens.length > 0 && tokens[0] === 'fav') {
                     untappd.userDistinctBeers(function (err, obj) {
                         var resp = handleBeerSearch(err, obj, responseUrl);
-                        //sendResponse(resp, responseUrl);
-                    }, { USERNAME: tokens[1], sort: 'checkin', limit: 1 });
+                    }, { USERNAME: tokens[1], sort: 'checkin', limit: limit });
                 }
                 else if (tokens.length > 0 && tokens[0] === 'badge') {
                     untappd.userBadges(function (err, obj) {
                         var resp = handleUserBadge(err, obj);
                         sendResponse(resp, responseUrl);
-                    }, { USERNAME: tokens[1], limit: 1 });
+                    }, { USERNAME: tokens[1], limit: limit });
                 }
                 else {
                     untappd.beerSearch(function (err, obj) {
                         var resp = handleBeerSearch(err, obj,responseUrl);
-                        //sendResponse(resp, responseUrl);
-                    }, { q: req.body.text, sort: 'count' });
+                    }, { q: tokens.slice(0,-1).join(' '), sort: 'count', limit: limit });
                 }
             }
         }
