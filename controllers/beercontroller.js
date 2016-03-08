@@ -11,7 +11,7 @@ module.exports = {
     postBeer: function (req, res) {
         
         if (req.body.token && req.body.text && req.body.token === config.slacktoken) {
-            res.status(200).send();
+            res.status(200).send({ "response_type": "in_channel" });
             
             var responseUrl = req.body.response_url;
             if (req.body.text) {
