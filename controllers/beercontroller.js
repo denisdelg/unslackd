@@ -82,25 +82,15 @@ function handleBeerSearch(err, obj, url) {
                 title: brewery.brewery_name + ' - ' + beer.beer_name + ' - ' + beer.beer_style,
                 fields: [
                     {
-                        title: 'ABV',
-                        value: beer.beer_abv + '%',
+                        title: 'ABV / IBU',
+                        value: beer.beer_abv + '%' + beer.beer_ibu === 0 ? 'N/A' : beer.beer_ibu,
                         short: true
                     },
                     {
-                        title: 'IBU',
-                        value: beer.beer_ibu === 0 ? 'N/A' : beer.beer_ibu,
+                        title: 'Checkins / Rating',
+                        value: (count ? count : 'N/A') + rating + ' / 5',
                         short: true
                     },
-                    {
-                        title: 'Checkins',
-                        value: count ? count : 'N/A',
-                        short: true
-                    },
-                    {
-                        title: 'Rating',
-                        value: rating + ' / 5',
-                        short: true
-                    }
                 ],
                 text: beer.beer_description + '\n',
                 thumb_url: beer.beer_label,
