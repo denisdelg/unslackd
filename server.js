@@ -4,8 +4,10 @@ const fs      = require('fs');
 const bodyparser = require('body-parser');
 const config = require('/var/lib/openshift/5682c2937628e1970e0001d8/app-root/data/config.json');
 const app = express();
+const helmt = require('helmet');
 //const config = require('./config.json');
 
+app.use(helmt());
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: false }));
 require('./config/routes.js')(app);

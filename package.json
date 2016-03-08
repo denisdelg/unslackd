@@ -22,6 +22,7 @@
   "dependencies": {
     "body-parser": "^1.14.2",
     "express": "~3.4.4",
+    "helmet": "^1.3.0",
     "node-untappd": "^0.4.1",
     "request": "^2.69.0"
   },
