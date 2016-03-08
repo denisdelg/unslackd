@@ -25,13 +25,13 @@ module.exports = {
                 else if (tokens.length > 0 && tokens[0] === 'badge') {
                     untappd.userBadges(function (err, obj) {
                         var resp = handleUserBadge(err, obj);
-                        sendResponse(resp, url);
+                        sendResponse(resp, responseUrl);
                     }, { USERNAME: tokens[1], limit: 1 });
                 }
                 else {
                     untappd.beerSearch(function (err, obj) {
                         var resp = handleBeerSearch(err, obj);
-                        sendResponse(resp, url);
+                        sendResponse(resp, responseUrl);
                     }, { q: req.body.text, sort: 'count' });
                 }
             }
