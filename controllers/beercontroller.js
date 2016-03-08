@@ -83,12 +83,12 @@ function handleBeerSearch(err, obj, url) {
                 fields: [
                     {
                         title: 'ABV / IBU',
-                        value: (beer.beer_abv + '%') + (' ' + beer.beer_ibu === 0 ? 'N/A' : beer.beer_ibu),
+                        value: (beer.beer_abv + '%   ') + (' ' + beer.beer_ibu === 0 ? 'N/A' : beer.beer_ibu),
                         short: true
                     },
                     {
                         title: 'Checkins / Rating',
-                        value: (count ? count : 'N/A') + (' ' + rating + ' / 5'),
+                        value: (count ? count : 'N/A') + ('   ' + rating + ' / 5'),
                         short: true
                     },
                 ],
