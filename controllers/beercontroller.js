@@ -80,7 +80,29 @@ function handleBeerSearch(err, obj, url) {
             
             var attachment = {
                 title: brewery.brewery_name + ' - ' + beer.beer_name + ' - ' + beer.beer_style,
-                text: '_*ABV: ' + beer.beer_abv + '% IBU: ' + beer.beer_ibu + '*_',
+                fields: [
+                    {
+                        title: 'ABV',
+                        value: beer.beer_abv + '%',
+                        short: true
+                    },
+                    {
+                        title: 'IBU',
+                        value: beer.beer_ibu === 0 ? 'N/A' : beer.beer_ibu,
+                        short: true
+                    },
+                    {
+                        title: 'Checkins',
+                        value: count ? count : 'N/A',
+                        short: true
+                    },
+                    {
+                        title: 'Rating',
+                        value: rating + ' / 5',
+                        short: true
+                    }
+                ],
+                text: beer.beer_description + '\n',
                 thumb_url: beer.beer_label,
                 color: 'good',
                 mrkdwn_in: ['text', 'title']
@@ -90,13 +112,13 @@ function handleBeerSearch(err, obj, url) {
                 attachment.title_link = brewery.contact.url;
             }
             
-            if (count) {
-                attachment.text += '\n _*Checkins: ' + count + ' Rating: ' + rating + ' / 5*_';
-            }
+            //if (count) {
+            //    attachment.text += '\n _*Checkins: ' + count + ' Rating: ' + rating + ' / 5*_';
+            //}
             
-            if (beer.beer_description.length > 0) {
-                attachment.text += '\n' + beer.beer_description + '\n';
-            }
+            //if (beer.beer_description.length > 0) {
+            //    attachment.text += '\n' + beer.beer_description + '\n';
+            //}
             
             response.attachments.push(attachment);
         }
