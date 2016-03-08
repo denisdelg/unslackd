@@ -40,9 +40,9 @@ module.exports = {
 }
 
 function sendResponse(resp, url) {
-    request.post(url, resp, function (err, resp, body) {
+    //request.post(url, resp, function (err, resp, body) {
 
-    });
+    //});
 }
 
 function handleBeerSearch(err, obj) {
