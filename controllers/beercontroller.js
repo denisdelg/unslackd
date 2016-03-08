@@ -2,17 +2,22 @@
 //const config = require('../config.json');
 const UntappdClient = require('node-untappd');
 const untappd = new UntappdClient(true);
+const request = require('request');
+
 untappd.setClientId(config.clientid);
 untappd.setClientSecret(config.clientsecret);
 
 module.exports = {
-	postBeer: function (req, res) {
+    postBeer: function (req, res) {
+        var responseUrl = req.body.response_url;
+        res.sendStatus(200);
+
 		if (req.body.token === config.slacktoken) {
 			var tokens = req.body.text.split(' ');
 			if (tokens.length > 0 && tokens[0] === 'fav') {
 				untappd.userDistinctBeers(function (err, obj) {
 					var resp = handleBeerSearch(err, obj);
-					res.send(resp);
+                    sendResponse(resp, responseUrl);
 				}, { USERNAME: tokens[1], sort: 'checkin', limit: 1 });
 			}
 			else if (tokens.length > 0 && tokens[0] === 'badge') {
@@ -32,6 +37,12 @@ module.exports = {
 			res.status(500).send('Invalid Token');
 		}
 	}
+}
+
+function sendResponse(resp, url) {
+    request.post(url, resp, function (err, resp, body) {
+
+    });
 }
 
 function handleBeerSearch(err, obj) {
