@@ -102,14 +102,6 @@ function handleBeerSearch(err, obj, url) {
                 attachment.title_link = brewery.contact.url;
             }
             
-            //if (count) {
-            //    attachment.text += '\n _*Checkins: ' + count + ' Rating: ' + rating + ' / 5*_';
-            //}
-            
-            //if (beer.beer_description.length > 0) {
-            //    attachment.text += '\n' + beer.beer_description + '\n';
-            //}
-            
             response.attachments.push(attachment);
         }
 
