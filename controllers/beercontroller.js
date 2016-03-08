@@ -43,7 +43,16 @@ module.exports = {
 }
 
 function sendResponse(resp, url) {
-    request.post(url, resp, function (err, resp, body) {
+    
+    request.post({
+        url: url,
+        method: "POST",
+        json: true,
+        header : {
+            "content-type": "application/json"
+        },
+        body: resp
+    }, function (err, resp, body) {
 
     });
 }
