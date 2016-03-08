@@ -42,7 +42,7 @@ module.exports = {
                 else {
                     untappd.beerSearch(function (err, obj) {
                         var resp = handleBeerSearch(err, obj,responseUrl);
-                    }, { q: tokens.slice(0,-1).join(' '), sort: 'count', limit: limit });
+                    }, { q: tokens.length > 1 ? tokens.slice(0,-1).join(' ') : tokens[0], sort: 'count', limit: limit });
                 }
             }
         }
