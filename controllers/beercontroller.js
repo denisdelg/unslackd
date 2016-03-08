@@ -67,18 +67,17 @@ function sendResponse(resp, url) {
 }
 
 function handleBeerSearch(err, obj, url) {
-	//var response = { attachments: [] };
     if (!err) {
+        var response = {
+            response_type: "in_channel",
+            attachments: []
+        };
+
         for (var i = 0; i < Math.min(obj.response.beers.items.length, 5); i++) {
             var beer = obj.response.beers.items[i].beer;
             var brewery = obj.response.beers.items[i].brewery;
             var count = obj.response.beers.items[i].count;
             var rating = obj.response.beers.items[i].rating_score;
-            
-            var response = {
-                response_type: "in_channel",
-                attachments: []
-            };
             
             var attachment = {
                 title: brewery.brewery_name + ' - ' + beer.beer_name + ' - ' + beer.beer_style,
@@ -97,12 +96,13 @@ function handleBeerSearch(err, obj, url) {
             }
             
             if (beer.beer_description.length > 0) {
-                attachment.text += '\n' + beer.beer_description;
+                attachment.text += '\n' + beer.beer_description + '\n';
             }
             
             response.attachments.push(attachment);
-            sendResponse(response, url);
         }
+
+        sendResponse(response, url);
     }
 
 		
