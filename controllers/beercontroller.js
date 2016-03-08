@@ -9,40 +9,43 @@ untappd.setClientSecret(config.clientsecret);
 
 module.exports = {
     postBeer: function (req, res) {
-        var responseUrl = req.body.response_url;
-        //res.sendStatus(200);
-
-		if (req.body.token === config.slacktoken) {
-			var tokens = req.body.text.split(' ');
-			if (tokens.length > 0 && tokens[0] === 'fav') {
-				untappd.userDistinctBeers(function (err, obj) {
-					var resp = handleBeerSearch(err, obj);
-                    sendResponse(resp, responseUrl);
-				}, { USERNAME: tokens[1], sort: 'checkin', limit: 1 });
-			}
-			else if (tokens.length > 0 && tokens[0] === 'badge') {
-				untappd.userBadges(function (err, obj) {
-					var resp = handleUserBadge(err, obj);
-					res.send(resp);
-				}, { USERNAME: tokens[1], limit: 1 });
-			}
-			else {
-				untappd.beerSearch(function (err, obj) {
-					var resp = handleBeerSearch(err, obj);
-					res.send(resp);
-				}, { q: req.body.text, sort: 'count' });
-			}
-		}
-		else {
-			res.status(500).send('Invalid Token');
-		}
+        
+        if (req.body.token && req.body.text && req.body.token === config.slacktoken) {
+            res.status(200).send();
+            
+            var responseUrl = req.body.response_url;
+            if (req.body.text) {
+                var tokens = req.body.text.split(' ');
+                if (tokens.length > 0 && tokens[0] === 'fav') {
+                    untappd.userDistinctBeers(function (err, obj) {
+                        var resp = handleBeerSearch(err, obj);
+                        sendResponse(resp, responseUrl);
+                    }, { USERNAME: tokens[1], sort: 'checkin', limit: 1 });
+                }
+                else if (tokens.length > 0 && tokens[0] === 'badge') {
+                    untappd.userBadges(function (err, obj) {
+                        var resp = handleUserBadge(err, obj);
+                        res.send(resp);
+                    }, { USERNAME: tokens[1], limit: 1 });
+                }
+                else {
+                    untappd.beerSearch(function (err, obj) {
+                        var resp = handleBeerSearch(err, obj);
+                        res.send(resp);
+                    }, { q: req.body.text, sort: 'count' });
+                }
+            }
+        }
+        else {
+            res.status(500).send();
+        }
 	}
 }
 
 function sendResponse(resp, url) {
-    //request.post(url, resp, function (err, resp, body) {
+    request.post(url, resp, function (err, resp, body) {
 
-    //});
+    });
 }
 
 function handleBeerSearch(err, obj) {
