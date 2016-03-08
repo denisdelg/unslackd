@@ -120,7 +120,7 @@ function handleUserBadge(err, obj, url) {
                 thumb_url: badge.media.badge_image_sm,
                 color: 'good'
             }
-            response.attachment.push(attachment);
+            response.attachments.push(attachment);
         }
 
         sendResponse(response, url);
