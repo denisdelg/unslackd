@@ -36,7 +36,6 @@ module.exports = {
                 else if (tokens.length > 0 && tokens[0] === 'badge') {
                     untappd.userBadges(function (err, obj) {
                         var resp = handleUserBadge(err, obj);
-                        sendResponse(resp, responseUrl);
                     }, { USERNAME: tokens[1], limit: limit });
                 }
                 else {
@@ -104,49 +103,26 @@ function handleBeerSearch(err, obj, url) {
 
         sendResponse(response, url);
     }
-
-		
-		
-		//response.response_type = "in_channel";
-		//var attachment = {};
-		//attachment.title = brewery.brewery_name + ' - ' + beer.beer_name + ' - ' + beer.beer_style;
-		
-		//if (brewery.contact.url !== null) {
-		//	attachment.title_link = brewery.contact.url;
-		//}
-		
-		//attachment.text = '_*ABV: ' + beer.beer_abv + '% IBU: ' + beer.beer_ibu + '*_';
-		
-		//if (count) {
-		//	attachment.text += '\n _*Checkins: ' + count + ' Rating: ' + rating + ' / 5*_';
-		//}
-		//if (beer.beer_description.length > 0) {
-		//	attachment.text += '\n' + beer.beer_description;
-		//}
-		
-		//attachment.thumb_url = beer.beer_label;
-		//attachment.color = 'good';
-		//attachment.mrkdwn_in = ['text', 'title'];
-		//response.attachments.push(attachment);
-	
-	
-	//return response;
 }
 
-function handleUserBadge (err, obj) {
-	var response = { attachments: [] };
-	if (err === null && obj.response.count > 0) {
-		var badge = obj.response.items[0];
-		response.response_type = "in_channel";
-		var attachment = {
-			title: badge.badge_name,
-			text: badge.badge_description,
-			thumb_url: badge.media.badge_image_sm,
-			color: 'good'
-		};
-		
-		response.attachments.push(attachment);
-	}
-	
-	return response;
+function handleUserBadge(err, obj, url) {
+    if (!err) {
+        var response = {
+            response_type: "in_channel",
+            attachments: []
+        };
+
+        for (var i = 0; i < Math.min(obj.response.count, 5); i++) {
+            var badge = obj.response.items[i];
+            var attachment = {
+                title: badge.badge_name,
+                text: badge.badge_description,
+                thumb_url: badge.media.badge_image_sm,
+                color: 'good'
+            }
+            respone.attachment.push(attachment);
+        }
+
+        sendResponse(response, url);
+    }
 }
