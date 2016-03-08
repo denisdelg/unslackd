@@ -10,7 +10,7 @@ untappd.setClientSecret(config.clientsecret);
 module.exports = {
     postBeer: function (req, res) {
         var responseUrl = req.body.response_url;
-        res.sendStatus(200);
+        //res.sendStatus(200);
 
 		if (req.body.token === config.slacktoken) {
 			var tokens = req.body.text.split(' ');
