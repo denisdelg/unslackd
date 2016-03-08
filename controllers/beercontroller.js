@@ -88,7 +88,7 @@ function handleBeerSearch(err, obj, url) {
                     },
                     {
                         title: 'Checkins / Rating',
-                        value: (count ? count : 'N/A') + ('                    ' + rating + ' / 5'),
+                        value: (count ? count : 'N/A') + ('                    ' + (rating ? rating : 'N/A' + ' / 5'),
                         short: true
                     },
                 ],
