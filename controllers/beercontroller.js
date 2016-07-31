@@ -1,4 +1,4 @@
-﻿(function() {
+(function() {
 	const configfile = process.env.configfile || require('/var/lib/openshift/5682c2937628e1970e0001d8/app-root/data/config.json');
 	const config = require(configfile);
     const UntappdClient = require('node-untappd');
