@@ -1,8 +1,9 @@
 (function() {
-	const configfile = process.env.configfile || require('/var/lib/openshift/5682c2937628e1970e0001d8/app-root/data/config.json');
-	const config = require(configfile);
-    const UntappdClient = require('node-untappd');
-	const untappd = new UntappdClient(true);
+    'use strict';
+	var configfile = process.env.configfile || require('/var/lib/openshift/5682c2937628e1970e0001d8/app-root/data/config.json');
+	var config = require(configfile);
+    var UntappdClient = require('node-untappd');
+	var untappd = new UntappdClient(true);
 	untappd.setClientId(config.clientid);
 	untappd.setClientSecret(config.clientsecret);
 

@@ -1,7 +1,7 @@
 ﻿(function () {
     'use strict';
 
-	const beercontroller = require('../controllers/beercontroller.js');
+	var beercontroller = require('../controllers/beercontroller.js');
 
 	module.exports = function (app) {
 		app.post('/beer', beercontroller.postBeer);

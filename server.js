@@ -1,12 +1,12 @@
 #!/bin/env node
 (function() {
     'use strict';
-    const express = require('express');
-    const fs = require('fs');
-    const bodyparser = require('body-parser');
-    const configfile = process.env.configfile || '/var/lib/openshift/5682c2937628e1970e0001d8/app-root/data/config.json';
-    const app = express();
-    const config = require(configfile);
+    var express = require('express');
+    var fs = require('fs');
+    var bodyparser = require('body-parser');
+    var configfile = process.env.configfile || '/var/lib/openshift/5682c2937628e1970e0001d8/app-root/data/config.json';
+    var app = express();
+    var config = require(configfile);
 
     app.use(bodyparser.json());
     app.use(bodyparser.urlencoded({extended: false}));
