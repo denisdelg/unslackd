@@ -1,5 +1,9 @@
-﻿const beercontroller = require('../controllers/beercontroller.js');
+﻿(function () {
+    'use strict';
 
-module.exports = function (app) {
-	app.post('/beer', beercontroller.postBeer);
-}
+	const beercontroller = require('../controllers/beercontroller.js');
+
+	module.exports = function (app) {
+		app.post('/beer', beercontroller.postBeer);
+	};
+})();
