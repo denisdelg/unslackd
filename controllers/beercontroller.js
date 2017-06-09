@@ -1,42 +1,42 @@
-(function() {
-    'use strict';
-	var configfile = process.env.configfilectrl || "/var/lib/openshift/5682c2937628e1970e0001d8/app-root/data/config.json";
-	var config = require(configfile);
-    var UntappdClient = require('node-untappd');
-	var untappd = new UntappdClient(true);
-	untappd.setClientId(config.clientid);
-	untappd.setClientSecret(config.clientsecret);
+'use strict';
+	
+const UntappdClient = require('node-untappd');
 
-	module.exports = {
-		postBeer: function (req, res) {
-			if (req.body.token === config.slacktoken) {
-				var tokens = req.body.text.split(' ');
-				if (tokens.length > 0 && tokens[0] === 'fav') {
-					untappd.userDistinctBeers(function (err, obj) {
-						var resp = handleBeerSearch(err, obj);
-						res.send(resp);
-					}, {USERNAME: tokens[1], sort: 'checkin', limit: 1});
-				}
-				else if (tokens.length > 0 && tokens[0] === 'badge') {
-					untappd.userBadges(function (err, obj) {
-						var resp = handleUserBadge(err, obj);
-						res.send(resp);
-					}, {USERNAME: tokens[1], limit: 1});
-				}
-				else {
-					untappd.beerSearch(function (err, obj) {
-						var resp = handleBeerSearch(err, obj);
-						res.send(resp);
-					}, {q: req.body.text, sort: 'count'});
-				}
+class BeerController {
+	constructor() {
+		this.untappdClient = new UntappdClient(true);
+		this.untappdClient.setClientId('');
+		this.untappdClient.setClientSecret('');
+	}
+
+	postBeer(req, res) {
+		if (req.body.token === config.slacktoken) {
+			var tokens = req.body.text.split(' ');
+			if (tokens.length > 0 && tokens[0] === 'fav') {
+				untappd.userDistinctBeers(function (err, obj) {
+					var resp = handleBeerSearch(err, obj);
+					res.send(resp);
+				}, {USERNAME: tokens[1], sort: 'checkin', limit: 1});
+			}
+			else if (tokens.length > 0 && tokens[0] === 'badge') {
+				untappd.userBadges(function (err, obj) {
+					var resp = handleUserBadge(err, obj);
+					res.send(resp);
+				}, {USERNAME: tokens[1], limit: 1});
 			}
 			else {
-				res.status(500).send('Invalid Token');
+				untappd.beerSearch(function (err, obj) {
+					var resp = handleBeerSearch(err, obj);
+					res.send(resp);
+				}, {q: req.body.text, sort: 'count'});
 			}
 		}
-	};
+		else {
+			res.status(500).send('Invalid Token');
+		}
+	}
 
-	function handleBeerSearch(err, obj) {
+	handleBeerSearch(err, obj) {
 		var response = {attachments: []};
 		if (err === null && obj.response.beers.count > 0) {
 			var beer = obj.response.beers.items[0].beer;
@@ -70,7 +70,7 @@
 		return response;
 	}
 
-	function handleUserBadge(err, obj) {
+	handleUserBadge(err, obj) {
 		var response = {attachments: []};
 		if (err === null && obj.response.count > 0) {
 			var badge = obj.response.items[0];
@@ -87,4 +87,6 @@
 
 		return response;
 	}
-})();
+}
+
+module.exports = BeerController;

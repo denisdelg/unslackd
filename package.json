@@ -1,12 +1,10 @@
 {
-  "name": "Unslackd",
+  "name": "unslackd",
   "version": "0.0.1",
   "description": "Custom Slack slash command to deliver Untappd information",
   "keywords": [
-    "OpenShift",
     "Node.js",
     "application",
-    "openshift",
     "Slack",
     "Untappd"
   ],
@@ -20,11 +18,12 @@
     "npm": ">= 2.15.8"
   },
   "dependencies": {
-    "body-parser": "^1.14.2",
-    "express": "~3.4.4",
-    "helmet": "^1.3.0",
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "helmet": "^3.6.1",
+    "lodash": "^4.17.4",
     "node-untappd": "^0.4.1",
-    "request": "^2.69.0"
+    "request": "^2.81.0"
   },
   "devDependencies": {},
   "bundleDependencies": [],
