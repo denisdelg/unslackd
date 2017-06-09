@@ -1,9 +1,10 @@
 ﻿'use strict';
 
 const express = require('express');
+const BeerController = require('../controllers/beercontroller.js');
+
 const router = express.Router();
-const bc = require('../controllers/beercontroller.js');
-const beerController = new bc();
+const beerController = new BeerController();
 
 router.post('/beer', beerController.postBeer);
 
